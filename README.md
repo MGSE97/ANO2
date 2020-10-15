@@ -51,3 +51,5 @@ Only one method can be used at once.
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.txt) file for details.
+
+This project uses OpenCV library, see the [License](OpenCV-License.txt) file for details.
