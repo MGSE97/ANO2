@@ -38,6 +38,8 @@ Only one method can be used at once.
 |------|--------|----------|----|
 |Canny edge detection|98.7%|Shadows, Far objects, Wide cars from near lots||
 |Treshold, Local binnary patterns|97.9%|Noise from ground|Wrong usage|
+|LBP, HOG, Comparison Day/Night|70.7%|Slow, Needs learning|Loads free lots images|
+|Combination|98.9%|Slow, Combination of above|Loads free lots images|
 
 ### With Neural Networks
 
