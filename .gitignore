@@ -37,3 +37,4 @@ opencv/
 /DIP/svm.data
 /DIP/ichl.dat.bkp
 /DIP/ichl.dat
+*.dat

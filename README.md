@@ -53,8 +53,8 @@ Only one method can be used at once.
 |Method|Accuracy|F1 Score|Learning time|Weaknesses|Info|
 |------|--------|--------|-------------|----------|----|
 |LBP, HOG, SVM|70.5%|27.4%|Short|Weak predictions||
-|CNN XS|68.3%|-|Long|Unusable, Doesn`t work|From lecture, DLib|
-|CNN XL|-|-|Infinite|Untrainable|DLib|                       
+|CNN XS|76.7%|73.1%|Long|Weak predictions|From lecture, DLib|
+|Alex Net|-|-|Infinite||DLib|                       
 |Combination|99.3%|98.9%|Slow, Combination of above|Loads free lots images|
 
 ## Author

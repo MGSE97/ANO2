@@ -41,10 +41,10 @@ void convert_to_ml(const std::vector< cv::Mat >& train_samples, cv::Mat& trainDa
 #define M_CNN 20
 // -- Methods --
 
-#define METHOD M_COMBO
+#define METHOD M_CNN
 
 #define TRAIN true
-#define WAIT 0
+#define WAIT 500
 
 
 int main(int argc, char** argv)
