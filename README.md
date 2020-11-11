@@ -27,24 +27,35 @@ Only one project. C++
 Program will show final detected image and parking lots processed images for each image in [**test_images** folder](DIP/test_images).
 After all images are evaluated, it will print statistics to console.
 
+![GUI visualization](Resources/M_Combo.png)
+
 ### Methods
 
 Methods can be enabled/disabled using **define** statements in code.
 Only one method can be used at once.
 
-### Without Nerual Networks
+### Without learning
 
-|Method|F1 Score|Weaknesses|Info|
-|------|--------|----------|----|
-|Canny edge detection|98.7%|Shadows, Far objects, Wide cars from near lots||
-|Treshold, Local binnary patterns|97.9%|Noise from ground|Wrong usage|
-|LBP, HOG, Comparison Day/Night|70.7%|Slow, Needs learning|Loads free lots images|
-|Combination|98.9%|Slow, Combination of above|Loads free lots images|
+|Method|Accuracy|F1 Score|Weaknesses|Info|
+|------|--------|--------|----------|----|
+|Canny edge detection|99.2%|98.7%|Shadows, Far objects, Wide cars from near lots||
+|Treshold, Local binnary patterns|98.7%|97.9%|Noise from ground|Wrong usage|
+|LBP, HOG, Comparison Day/Night|80.4%|70.7%|Slow, Needs learning|Loads free lots images|
 
-### With Neural Networks
+### Partial learning
 
-|Method|F1 Score|Info|
-|------|--------|----|
+|Method|Accuracy|F1 Score|Learning time|Weaknesses|Info|
+|------|--------|--------|-------------|----------|----|
+|LBP, HOG, Comparison Day/Night|80.4%|70.7%|Short|Slow|Loads free lots images|
+
+### With learning
+
+|Method|Accuracy|F1 Score|Learning time|Weaknesses|Info|
+|------|--------|--------|-------------|----------|----|
+|LBP, HOG, SVM|70.5%|27.4%|Short|Weak predictions||
+|CNN XS|68.3%|-|Long|Unusable, Doesn`t work|From lecture, DLib|
+|CNN XL|-|-|Infinite|Untrainable|DLib|                       
+|Combination|99.3%|98.9%|Slow, Combination of above|Loads free lots images|
 
 ## Author
 

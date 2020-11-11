@@ -13,6 +13,18 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Methods">
+      <UniqueIdentifier>{e39e43cd-6c70-4b2c-b52a-b5af56a50699}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Methods\NonLearning">
+      <UniqueIdentifier>{d6fcefae-f901-40ec-aa8f-402a020dbcb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Methods\Learning">
+      <UniqueIdentifier>{c8b669b5-ca50-486c-b9f1-ac9344098506}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Methods\SemiLearning">
+      <UniqueIdentifier>{282797b0-e32d-490e-851a-f7c7a27a6ef1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -27,12 +39,33 @@
     <ClInclude Include="Plot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Method.h">
+      <Filter>Methods</Filter>
+    </ClInclude>
+    <ClInclude Include="Threshold.h">
+      <Filter>Methods\NonLearning</Filter>
+    </ClInclude>
+    <ClInclude Include="Canny.h">
+      <Filter>Methods\NonLearning</Filter>
+    </ClInclude>
+    <ClInclude Include="CNN.h">
+      <Filter>Methods\Learning</Filter>
+    </ClInclude>
+    <ClInclude Include="SVM.h">
+      <Filter>Methods\Learning</Filter>
+    </ClInclude>
+    <ClInclude Include="HOG.h">
+      <Filter>Methods\SemiLearning</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dlib\all\source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

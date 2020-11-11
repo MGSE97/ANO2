@@ -32,3 +32,8 @@
 **/x64/
 opencv/
 .vs/
+/dlib-19.21
+/cudnn-10.2-v7.6.5.32/cuda
+/DIP/svm.data
+/DIP/ichl.dat.bkp
+/DIP/ichl.dat
