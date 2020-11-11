@@ -6,9 +6,10 @@ Image Analysis II. Detection of parking lot availablity using multiple methods.
 ## Getting Started
 
 1. Download this repository
-2. Unzip [opencv.zip] into solution folder
+2. Unzip [opencv](opencv.zip) into solution folder
 3. Open [solution](DIP.sln)  
-4. Build & Run
+4. Check/Remove other includes DLib, Cuda, ...
+5. Build & Run
 
 ### Prerequisites
 
