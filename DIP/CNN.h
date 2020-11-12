@@ -9,37 +9,41 @@
 // I 80x80x3 = 19200, C 80x80x1 = 6400, H 80x80x1 = 6400, All 80x80x5 = 32000
 #if NET == 0
 
+#define INPUT_TYPE unsigned char
 using cnn_xs = dlib::loss_multiclass_log<
 	dlib::fc<2,
 	dlib::relu< dlib::fc<84,
 	dlib::relu< dlib::fc<120,
 	dlib::max_pool < 2, 2, 2, 2, dlib::relu < dlib::con < 16, 5, 5, 1, 1,
 	dlib::max_pool < 2, 2, 2, 2, dlib::relu < dlib::con< 6, 5, 5, 1, 1,
-	dlib::input< dlib::matrix<unsigned char>>
+	dlib::input< dlib::matrix<INPUT_TYPE>>
 	>>>>>>>>>>>>; // 28x28x1
 
 cnn_xs net{};
-const std::string save = "cnn.dat";
+const std::string save = "cnn4.dat";
 #endif
 
 #if NET == 1
 
+#define INPUT_TYPE dlib::rgb_pixel
 using alex = dlib::loss_multiclass_log<
 	dlib::relu < dlib::fc < 2,
 	dlib::dropout <
-	dlib::relu < dlib::fc < 1024,
+	dlib::relu < dlib::fc < 1000,
 	dlib::dropout <
-	dlib::relu < dlib::fc < 1024,
+	dlib::relu < dlib::fc < 4096,
+	dlib::dropout <
+	dlib::relu < dlib::fc < 4096,
 	dlib::max_pool < 3, 3, 2, 2,
 	dlib::relu < dlib::con < 384, 3, 3, 1, 1,
 	dlib::relu < dlib::con < 384, 3, 3, 1, 1,
 	dlib::relu < dlib::con < 384, 3, 3, 1, 1,
 	dlib::max_pool < 3, 3, 2, 2,
-	dlib::relu < dlib::con < 128, 5, 5, 1, 1,
+	dlib::relu < dlib::con < 256, 5, 5, 1, 1,
 	dlib::max_pool < 3, 3, 2, 2,
-	dlib::relu < dlib::con < 46, 11, 11, 4, 4,
-	dlib::input < dlib::matrix < unsigned char
-	>>>>>>>>>>>>>>>>>>>>>>>>;
+	dlib::relu < dlib::con < 96, 11, 11, 4, 4,
+	dlib::input < dlib::matrix < INPUT_TYPE
+	>>>>>>>>>>>>>>>>>>>>>>>>>>>;
 
 alex net{};
 const std::string save = "alex.dat";
@@ -59,7 +63,11 @@ private:
 
 		// -------------- ALEX NET ----------------
 		#if NET == 1
-		cv::resize(input, result, cv::Size(113, 113));
+		cv::Mat tmp;
+		cv::cvtColor(input, tmp, cv::COLOR_GRAY2RGB);
+		//result.convertTo(tmp, CV_32FC3);
+		cv::resize(tmp, result, cv::Size(227, 227));
+		//cv::resize(input, result, cv::Size(113, 113));
 		#endif
 	}
 
@@ -72,8 +80,8 @@ private:
 			trainer->set_learning_rate(0.01);
 			trainer->set_min_learning_rate(0.0001);
 			trainer->set_mini_batch_size(512);
-			trainer->set_iterations_without_progress_threshold(1000);
-			trainer->set_max_num_epochs(20);
+			trainer->set_iterations_without_progress_threshold(2000);
+			trainer->set_max_num_epochs(1000);
 
 			return trainer;
 		}
@@ -83,10 +91,10 @@ private:
 		static dlib::dnn_trainer<alex>* prepareTrainer()
 		{
 			// -------------- ALEX NET ----------------
-			dlib::dnn_trainer<alex>* trainer = new dlib::dnn_trainer<alex>(net, dlib::sgd(), { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
-			trainer->set_learning_rate(0.01);
+			dlib::dnn_trainer<alex>* trainer = new dlib::dnn_trainer<alex>(net, dlib::sgd(), { 0 });
+			trainer->set_learning_rate(0.1);
 			trainer->set_min_learning_rate(0.0001);
-			trainer->set_mini_batch_size(512);
+			trainer->set_mini_batch_size(32);
 			trainer->set_iterations_without_progress_threshold(1000);
 			trainer->set_max_num_epochs(20);
 
@@ -99,7 +107,7 @@ public:
 	
 	void train(std::vector<cv::Mat>& train_images, std::vector<unsigned char>& train_labels) override
 	{
-		std::vector<dlib::matrix<unsigned char>> images;
+		std::vector<dlib::matrix<INPUT_TYPE>> images;
 		std::vector<unsigned long> labels;
 
 		/*const auto images_count = train_images.size();
@@ -107,13 +115,17 @@ public:
 		{
 			train_images.push_back(train_images[i] / 2);
 			train_labels.push_back(train_labels[i]);
+			train_images.push_back(train_images[i] / 3);
+			train_labels.push_back(train_labels[i]);
+			train_images.push_back(train_images[i] / 4);
+			train_labels.push_back(train_labels[i]);
 		}*/
 
 		for (int i = 0; i < train_images.size(); i++) {
 			cv::Mat image;
 			prepare(train_images[i], image);
-			dlib::cv_image<unsigned char> cimg(image);
-			dlib::matrix<unsigned char> dlibimg = dlib::mat(cimg);
+			dlib::cv_image<INPUT_TYPE> cimg(image);
+			dlib::matrix<INPUT_TYPE> dlibimg = dlib::mat(cimg);
 			images.push_back(dlibimg);
 			labels.push_back(train_labels[i]);
 		}
@@ -144,8 +156,8 @@ public:
 		}
 		cv::Mat image;
 		prepare(input, image);
-		dlib::cv_image<unsigned char> cimg(image);
-		dlib::matrix<unsigned char> dlibimg = dlib::mat(cimg);
+		dlib::cv_image<INPUT_TYPE> cimg(image);
+		dlib::matrix<INPUT_TYPE> dlibimg = dlib::mat(cimg);
 
 		auto prediction = net(dlibimg);
 

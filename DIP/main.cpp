@@ -7,6 +7,7 @@
 #include <opencv2/opencv.hpp>
 
 //dlib - http://dlib.net
+#include "config.h"
 #include "dlib/matrix.h"
 #include "dlib/dnn.h"
 #include "dlib/opencv.h"

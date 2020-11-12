@@ -54,6 +54,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 10.2.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
@@ -75,18 +76,18 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files %28x86%29\dlib_project\include;$(IncludePath)</IncludePath>
     <ReferencePath>$(ReferencePath)</ReferencePath>
-    <LibraryPath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\lib\Win32;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Program Files %28x86%29\dlib_project\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\lib\x64;C:\Program Files %28x86%29\dlib_project\lib;D:\Documents\Projekty\Škola\ANO2\vsproj\cudnn-10.2-v7.6.5.32\cuda\lib\x64;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Program Files %28x86%29\dlib_project\lib;D:\Documents\Projekty\Škola\ANO2\vsproj\cudnn-10.2-v7.6.5.32\cuda\lib\x64;$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
-    <IncludePath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\include;D:\Documents\Projekty\Škola\ANO2\vsproj\cudnn-10.2-v7.6.5.32\cuda\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files %28x86%29\dlib_project\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <ReferencePath>$(VC_ReferencesPath_x64);</ReferencePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -115,15 +116,24 @@
       <AdditionalIncludeDirectories>$(ProjectDir)\..\opencv\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <OpenMPSupport>true</OpenMPSupport>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)\..\opencv\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opencv_world343d.lib;cuda.lib;cudadevrt.lib;cudart.lib;cudart_static.lib;OpenCL.lib;cudnn.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opencv_world343d.lib;cuda.lib;cudadevrt.lib;cudart.lib;cudart_static.lib;OpenCL.lib;cudnn.lib;dlib19.21.0_release_64bit_msvc1927.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <HeapReserveSize>20000000</HeapReserveSize>
       <StackReserveSize>10000000</StackReserveSize>
     </Link>
+    <CudaCompile>
+      <CudaRuntime>Shared</CudaRuntime>
+      <TargetMachinePlatform>64</TargetMachinePlatform>
+      <NvccCompilation>compile</NvccCompilation>
+    </CudaCompile>
+    <CudaLink>
+      <AdditionalOptions>-arch=sm_50;-D__STRICT_ANSI__;-D_MWAITXINTRIN_H_INCLUDED;-D_FORCE_INLINES; -std=c++11 -Xcompiler -fPIC %(AdditionalOptions)</AdditionalOptions>
+    </CudaLink>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -163,12 +173,22 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)\..\opencv\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opencv_world343.lib;cudnn.lib;cuda.lib;cudart_static.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;cublas.lib;cudart.lib;curand.lib;nppc.lib;nppidei.lib;nppist.lib;nvblas.lib;nvrtc.lib;cublasLt.lib;cusolver.lib;nppial.lib;nppif.lib;nppisu.lib;nvgraph.lib;OpenCL.lib;cudadevrt.lib;cufft.lib;cusolverMg.lib;nppicc.lib;nppig.lib;nppitc.lib;nvjpeg.lib;cufftw.lib;cusparse.lib;nppicom.lib;nppim.lib;npps.lib;nvml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opencv_world343.lib;cudnn.lib;cuda.lib;cudart_static.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;cublas.lib;cudart.lib;curand.lib;nppc.lib;nppidei.lib;nppist.lib;nvblas.lib;nvrtc.lib;cublasLt.lib;cusolver.lib;nppial.lib;nppif.lib;nppisu.lib;nvgraph.lib;OpenCL.lib;cudadevrt.lib;cufft.lib;cusolverMg.lib;nppicc.lib;nppig.lib;nppitc.lib;nvjpeg.lib;cufftw.lib;cusparse.lib;nppicom.lib;nppim.lib;npps.lib;nvml.lib;dlib19.21.0_release_64bit_msvc1927.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <CudaLink>
+      <AdditionalOptions>-arch=sm_50;-D__STRICT_ANSI__;-D_MWAITXINTRIN_H_INCLUDED;-D_FORCE_INLINES; -std=c++11 -Xcompiler -fPIC %(AdditionalOptions)</AdditionalOptions>
+    </CudaLink>
+    <CudaCompile>
+      <CudaRuntime>Shared</CudaRuntime>
+    </CudaCompile>
+    <CudaCompile>
+      <TargetMachinePlatform>64</TargetMachinePlatform>
+    </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Canny.h" />
     <ClInclude Include="CNN.h" />
+    <ClInclude Include="config.h" />
     <ClInclude Include="Dictionary.h" />
     <ClInclude Include="HOG.h" />
     <ClInclude Include="Method.h" />
@@ -200,5 +220,6 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 10.2.targets" />
   </ImportGroup>
 </Project>
