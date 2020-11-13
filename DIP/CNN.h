@@ -4,7 +4,7 @@
 #include "dlib/dnn.h"
 #include "dlib/opencv.h"
 
-#define NET 0
+#define NET 1
 
 // I 80x80x3 = 19200, C 80x80x1 = 6400, H 80x80x1 = 6400, All 80x80x5 = 32000
 #if NET == 0
@@ -29,8 +29,6 @@ const std::string save = "cnn4.dat";
 using alex = dlib::loss_multiclass_log<
 	dlib::relu < dlib::fc < 2,
 	dlib::dropout <
-	dlib::relu < dlib::fc < 1000,
-	dlib::dropout <
 	dlib::relu < dlib::fc < 4096,
 	dlib::dropout <
 	dlib::relu < dlib::fc < 4096,
@@ -43,10 +41,10 @@ using alex = dlib::loss_multiclass_log<
 	dlib::max_pool < 3, 3, 2, 2,
 	dlib::relu < dlib::con < 96, 11, 11, 4, 4,
 	dlib::input < dlib::matrix < INPUT_TYPE
-	>>>>>>>>>>>>>>>>>>>>>>>>>>>;
+	>>>>>>>>>>>>>>>>>>>>>>>>;
 
 alex net{};
-const std::string save = "alex.dat";
+const std::string save = "alex4.dat";
 #endif
 
 bool hasNet = false;
@@ -76,12 +74,12 @@ private:
 		static dlib::dnn_trainer<cnn_xs>* prepareTrainer()
 		{
 			// -------------- CNN XS ----------------
-			dlib::dnn_trainer<cnn_xs>* trainer = new dlib::dnn_trainer<cnn_xs>(net, dlib::sgd(), { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+			dlib::dnn_trainer<cnn_xs>* trainer = new dlib::dnn_trainer<cnn_xs>(net, dlib::sgd(), { 0 });
 			trainer->set_learning_rate(0.01);
 			trainer->set_min_learning_rate(0.0001);
 			trainer->set_mini_batch_size(512);
 			trainer->set_iterations_without_progress_threshold(2000);
-			trainer->set_max_num_epochs(1000);
+			trainer->set_max_num_epochs(100);
 
 			return trainer;
 		}
@@ -92,11 +90,11 @@ private:
 		{
 			// -------------- ALEX NET ----------------
 			dlib::dnn_trainer<alex>* trainer = new dlib::dnn_trainer<alex>(net, dlib::sgd(), { 0 });
-			trainer->set_learning_rate(0.1);
-			trainer->set_min_learning_rate(0.0001);
-			trainer->set_mini_batch_size(32);
+			trainer->set_learning_rate(1e-4);
+			trainer->set_min_learning_rate(1e-6);
+			trainer->set_mini_batch_size(128);
 			trainer->set_iterations_without_progress_threshold(1000);
-			trainer->set_max_num_epochs(20);
+			trainer->set_max_num_epochs(200);
 
 			return trainer;
 		}
