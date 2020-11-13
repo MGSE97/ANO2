@@ -74,7 +74,7 @@ Only one method can be used at once.
 ||||||||||
 |CNN XS|92.3%|89.1%|Short|100|512|1e-2|Small network, Shadows, Night|From lecture, DLib|
 ||||||||||
-|Alex Net|-|-|Stuck|-|-|-|Large, Sensitive|DLib| 
+|Alex Net|-|-|Long|-|-|-|Large, Sensitive|DLib| 
 |->|98.9%|98.3%|30 min|200|128|1e-5||~0.000872731|                      
 |->|98.7%|98.0%|15 min|90|32|1e-5||~0.0114783|
 |->|98.7%|97.9%|1.5 h|398|32|1e-6||~0.0487347|
