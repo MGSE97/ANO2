@@ -6,15 +6,33 @@ Image Analysis II. Detection of parking lot availablity using multiple methods.
 ## Getting Started
 
 1. Download this repository
-2. Unzip [opencv](opencv.zip) into solution folder
-3. Open [solution](DIP.sln)  
-4. Check/Remove other includes DLib, Cuda, ...
-5. Build & Run
+2. Unzip [OpenCV](opencv.zip) into solution folder
+3. Install [CUDA Toolkit 10.2 or newer](https://developer.nvidia.com/cuda-10.2-download-archive?target_os=Windows&target_arch=x86_64&target_version=10&target_type=exenetwork)
+4. Download and unzip [DLib](http://dlib.net/compile.html)
+    - Open console
+    - Navigate to DLib folder
+    - Build DLib
+      ```
+      mkdir build
+      cd build
+      cmake -G "Visual Studio 14 2015 Win64" -T host=x64 ..
+      ```
+    - Install Dlib, by default, it will create includes and library in `%Program Files%\dlib_project`
+      ```
+      cmake --build . --config Release --target INSTALL
+      ```
+5. Open [solution](DIP.sln)  
+6. Go to DIP project properties and check Library locations to match within your system
+7. Merge [config.h](DIP/config.h) file with DLib builded in `dlib-19.21\build\dlib\config.h`
+8. Build & Run
 
 ### Prerequisites
 
 Software:
 * [OpenCV](https://opencv.org/) *included* - Image manipulation library
+* [DLib](http://dlib.net/) - Neural Networks API
+* [CUDA Toolkit](https://developer.nvidia.com/cuda-toolkit) - CUDA GPU Acceleration, used in DLib
+* [CMake](https://cmake.org/) - Building tool, used for DLib
 
 IDE:
 * [Visual Studio 2019](https://visualstudio.microsoft.com/cs/vs/)
