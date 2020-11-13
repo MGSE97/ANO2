@@ -15,7 +15,7 @@ Image Analysis II. Detection of parking lot availablity using multiple methods.
       ```
       mkdir build
       cd build
-      cmake -G "Visual Studio 14 2015 Win64" -T host=x64 ..
+      cmake -G "Visual Studio 16 2019" -T host=x64 ..
       ```
     - Install Dlib, by default, it will create includes and library in `%Program Files%\dlib_project`
       ```
