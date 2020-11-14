@@ -18,6 +18,7 @@
 #include "SVM.h"
 #include "CNN.h"
 #include "AlexNet.h"
+#include "VGG7.h"
 
 using namespace std;
 using namespace cv;
@@ -43,11 +44,12 @@ void convert_to_ml(const std::vector< cv::Mat >& train_samples, cv::Mat& trainDa
 #define M_SVM 20
 #define M_CNN 21
 #define M_ALEX 22
+#define M_VGG7 23
 // -- Methods --
 
-#define METHOD M_ALEX
+#define METHOD M_VGG7
 
-#define TRAIN false
+#define TRAIN true
 #define WAIT 500
 
 
@@ -76,6 +78,8 @@ void train_parking()
 	ms.push_back(new CNN{});
 	#elif METHOD == M_ALEX:
 	ms.push_back(new AlexNet{});
+	#elif METHOD == M_VGG7:
+	ms.push_back(new VGG7{});
 	#elif METHOD == M_SVM:
 	ms.push_back(new SVMC{});
 	#elif METHOD == M_COMBO:
@@ -177,6 +181,8 @@ bool is_occupied(int i, Mat* plot, std::vector<Mat>* spaces_imgs, Mat* spaces_im
 		ms.push_back(PredictionMethod{ new CNN{}, 1 });
 	#elif METHOD == M_ALEX
 		ms.push_back(PredictionMethod{ new AlexNet{}, 1 });
+	#elif METHOD == M_VGG7
+		ms.push_back(PredictionMethod{ new VGG7{}, 1 });
 	#elif METHOD == M_COMBO
 		ms.push_back(PredictionMethod{ new CannyED{}, 1 });
 		ms.push_back(PredictionMethod{ new Threshold{}, 0.9 });

@@ -198,6 +198,7 @@
     <ClInclude Include="SVM.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Threshold.h" />
+    <ClInclude Include="VGG7.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dlib\all\source.cpp" />

@@ -63,6 +63,9 @@
     <ClInclude Include="AlexNet.h">
       <Filter>Methods\Learning</Filter>
     </ClInclude>
+    <ClInclude Include="VGG7.h">
+      <Filter>Methods\Learning</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
