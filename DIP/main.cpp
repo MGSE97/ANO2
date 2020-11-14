@@ -13,10 +13,11 @@
 #include "dlib/opencv.h"
 
 #include "Canny.h"
-#include "CNN.h"
+#include "Threshold.h"
 #include "HOG.h"
 #include "SVM.h"
-#include "Threshold.h"
+#include "CNN.h"
+#include "AlexNet.h"
 
 using namespace std;
 using namespace cv;
@@ -32,30 +33,29 @@ void convert_to_ml(const std::vector< cv::Mat >& train_samples, cv::Mat& trainDa
 
 // -- Methods --
 #define M_COMBO -1
+#define M_COMBO2 -2
 
 #define M_CANNY 0
 #define M_TLBP 1
 
 #define M_HOG 10
 
-#define M_SVM 21
-#define M_CNN 20
+#define M_SVM 20
+#define M_CNN 21
+#define M_ALEX 22
 // -- Methods --
 
-#define METHOD M_CNN
+#define METHOD M_ALEX
 
-#define TRAIN true
+#define TRAIN false
 #define WAIT 500
 
 
 int main(int argc, char** argv)
 {
-	if (TRAIN)
-	{
-		cout << "Train OpenCV Start" << endl;
-		train_parking();
-		cout << "Train OpenCV End" << endl;
-	}
+	cout << "Train OpenCV Start" << endl;
+	train_parking();
+	cout << "Train OpenCV End" << endl;
 
 	cout << "Test OpenCV Start" << endl;
 	test_parking();
@@ -69,43 +69,39 @@ void train_parking()
 	std::vector<Mat> train_images;
 	std::vector<unsigned char> train_labels;
 
-	Method* m = nullptr;
-	switch (METHOD)
+	std::vector<Method*> ms;
+	#if METHOD == M_HOG:
+	ms.push_back(new HOGD{});
+	#elif METHOD == M_CNN:
+	ms.push_back(new CNN{});
+	#elif METHOD == M_ALEX:
+	ms.push_back(new AlexNet{});
+	#elif METHOD == M_SVM:
+	ms.push_back(new SVMC{});
+	#elif METHOD == M_COMBO:
+	//m = new SVMC{};
+	ms.push_back(new HOGD{});
+	#elif METHOD == M_COMBO2:
+	ms.push_back(new HOGD{});
+	ms.push_back(new AlexNet{});
+	#endif
+
+	auto stop = true;
+	for(auto m : ms)
 	{
-	case M_HOG:
-		m = new HOGD{};
-		break;
+		if (m == nullptr)
+			continue;
 
-	case M_CNN:
-		m = new CNN{};
-		break;
-
-	case M_SVM:
-		m = new SVMC{};
-		break;
-
-	case M_COMBO:
-		//m = new SVMC{};
-		m = new HOGD{};
-		break;
+		const auto train = TRAIN || m->NeedTraining();
+		
+		if (train && m->CustomTraining())
+			m->train(train_images, train_labels);
+		else if(train)
+			stop = false;
 	}
 
-	if (m == nullptr)
-	{
+	if(stop)
 		return;
-	}
-	else if (m->CustomTraining())
-	{
-		m->train(train_images, train_labels);
-		/*delete m;
-		m = nullptr;*/
-		return;
-	}
-	else if (!m->NeedTraining()) {
-		/*delete m;
-		m = nullptr;*/
-		return;
-	}
 
 	//load parking lot geometry
 	space* spaces = new space[Utils::spaces_num];
@@ -143,52 +139,61 @@ void train_parking()
 	cout << "Train images: " << train_images.size() << endl;
 	cout << "Train labels: " << train_labels.size() << endl;
 
-	m->train(train_images, train_labels);
+	for (auto m : ms)
+	{
+		if(m == nullptr)
+			continue;
+
+		const auto train = TRAIN || m->NeedTraining();
+		
+		if (train && !m->CustomTraining())
+			m->train(train_images, train_labels);
+	}
 
 	/*delete m;
 	m = nullptr;*/
 }
 
+struct PredictionMethod
+{
+	Method* method;
+	float weight;
+};
+
 bool is_occupied(int i, Mat* plot, std::vector<Mat>* spaces_imgs, Mat* spaces_img, Mat* local_spaces_img)
 {
 	cv::Mat tmp = cv::Mat::zeros(plot->rows, plot->cols, CV_8UC1), tmp2;
-	bool label = false;
-	Method* m = nullptr;
-	switch (METHOD)
-	{
-	case M_CANNY:
-		m = new CannyED{};
-		break;
-	case M_TLBP:
-		m = new Threshold{};
-		break;
+	float min_weight = 1.0;
+	std::vector<PredictionMethod> ms;
+	#if METHOD == M_CANNY
+		ms.push_back(PredictionMethod{ new CannyED{}, 1 });
+	#elif METHOD == M_TLBP
+		ms.push_back(PredictionMethod{ new Threshold{}, 1 });
+	#elif METHOD == M_HOG
+		ms.push_back(PredictionMethod{ new HOGD{}, 1 });
+	#elif METHOD == M_SVM
+		ms.push_back(PredictionMethod{ new SVMC{}, 1 });
+	#elif METHOD == M_CNN
+		ms.push_back(PredictionMethod{ new CNN{}, 1 });
+	#elif METHOD == M_ALEX
+		ms.push_back(PredictionMethod{ new AlexNet{}, 1 });
+	#elif METHOD == M_COMBO
+		ms.push_back(PredictionMethod{ new CannyED{}, 1 });
+		ms.push_back(PredictionMethod{ new Threshold{}, 0.9 });
+		ms.push_back(PredictionMethod{ new HOGD{}, 0.8 });
+	#elif METHOD == M_COMBO2
+		ms.push_back(PredictionMethod{ new CannyED{}, 1 });
+		ms.push_back(PredictionMethod{ new Threshold{}, 0.9 });
+		ms.push_back(PredictionMethod{ new AlexNet{}, 0.9 });
+		ms.push_back(PredictionMethod{ new HOGD{}, 0.8 });
+		min_weight = 2.0;
+	#endif
 
-	case M_HOG:
-		m = new HOGD{};
-		break;
+	float weight = 0.0;
 
-	case M_SVM:
-		m = new SVMC{};
-		break;
-	case M_CNN:
-		m = new CNN{};
-		break;
-
-	case M_COMBO:
-		CannyED c{};
-		Threshold t{};
-		HOGD h{};
-		label = c.predict(i, *plot, tmp)
-			+ t.predict(i, *plot, tmp) * 0.9
-			+ h.predict(i, *plot, tmp) * 0.8 > 1.0;
-		break;
-	}
-
-	if (m != nullptr) {
-		label = m->predict(i, *plot, tmp);
-		/*delete m;
-		m = nullptr;*/
-	}
+	for (auto pm : ms)
+		if (pm.method != nullptr)
+			weight += pm.method->predict(i, *plot, tmp)*pm.weight;
 
 
 	// Display grid magic
@@ -204,7 +209,7 @@ bool is_occupied(int i, Mat* plot, std::vector<Mat>* spaces_imgs, Mat* spaces_im
 	else
 		hconcat(*spaces_img, *local_spaces_img, *spaces_img);
 
-	return label;
+	return weight >= min_weight;
 }
 
 /**

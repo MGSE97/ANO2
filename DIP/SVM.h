@@ -11,9 +11,7 @@ const float eps = 1e-7;
 
 class SVMC : public Method
 {
-public:
-	bool NeedTraining() override { return true; }
-	
+public:	
 	void train(std::vector<cv::Mat>& train_images, std::vector<unsigned char>& train_labels) override
 	{
 		PrepareSVM();

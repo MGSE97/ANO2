@@ -186,6 +186,7 @@
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AlexNet.h" />
     <ClInclude Include="Canny.h" />
     <ClInclude Include="CNN.h" />
     <ClInclude Include="config.h" />

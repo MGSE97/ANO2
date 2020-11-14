@@ -1,28 +1,37 @@
-﻿#pragma once
+#pragma once
 #include "Method.h"
 #include "dlib/matrix.h"
 #include "dlib/dnn.h"
 #include "dlib/opencv.h"
 
-using cnn_xs = dlib::loss_multiclass_log<
-	dlib::fc<2,
-	dlib::relu< dlib::fc<84,
-	dlib::relu< dlib::fc<120,
-	dlib::max_pool < 2, 2, 2, 2, dlib::relu < dlib::con < 16, 5, 5, 1, 1,
-	dlib::max_pool < 2, 2, 2, 2, dlib::relu < dlib::con< 6, 5, 5, 1, 1,
-	dlib::input< dlib::matrix<unsigned char>>
-	>>>>>>>>>>>>; // 28x28x1
+using alex = dlib::loss_multiclass_log<
+	dlib::relu < dlib::fc < 2,
+	dlib::dropout <
+	dlib::relu < dlib::fc < 4096,
+	dlib::dropout <
+	dlib::relu < dlib::fc < 4096,
+	dlib::max_pool < 3, 3, 2, 2,
+	dlib::relu < dlib::con < 384, 3, 3, 1, 1,
+	dlib::relu < dlib::con < 384, 3, 3, 1, 1,
+	dlib::relu < dlib::con < 384, 3, 3, 1, 1,
+	dlib::max_pool < 3, 3, 2, 2,
+	dlib::relu < dlib::con < 256, 5, 5, 1, 1,
+	dlib::max_pool < 3, 3, 2, 2,
+	dlib::relu < dlib::con < 96, 11, 11, 4, 4,
+	dlib::input < dlib::matrix < dlib::rgb_pixel
+	>>>>>>>>>>>>>>>>>>>>>>>>; // 227x227x3
 
-class CNN : public Method
-{	
+
+class AlexNet : public Method
+{
 public:
-	static cnn_xs net;
+	static alex net;
 	static const std::string save;
 	static bool hasNet;
 	
 	void train(std::vector<cv::Mat>& train_images, std::vector<unsigned char>& train_labels) override
 	{
-		std::vector<dlib::matrix<unsigned char>> images;
+		std::vector<dlib::matrix<dlib::rgb_pixel>> images;
 		std::vector<unsigned long> labels;
 
 		/*const auto images_count = train_images.size();
@@ -39,8 +48,8 @@ public:
 		for (int i = 0; i < train_images.size(); i++) {
 			cv::Mat image;
 			prepare(train_images[i], image);
-			dlib::cv_image<unsigned char> cimg(image);
-			dlib::matrix<unsigned char> dlibimg = dlib::mat(cimg);
+			dlib::cv_image<dlib::rgb_pixel> cimg(image);
+			dlib::matrix<dlib::rgb_pixel> dlibimg = dlib::mat(cimg);
 			images.push_back(dlibimg);
 			labels.push_back(train_labels[i]);
 		}
@@ -65,14 +74,14 @@ public:
 		if (!hasNet) {
 			dlib::deserialize(save) >> net;
 			hasNet = true;
-			
-			int len;
-			net.print(std::cout, 0, len);
+
+			//int len;
+			//net.print(std::cout, 0, len);
 		}
 		cv::Mat image;
 		prepare(input, image);
-		dlib::cv_image<unsigned char> cimg(image);
-		dlib::matrix<unsigned char> dlibimg = dlib::mat(cimg);
+		dlib::cv_image<dlib::rgb_pixel> cimg(image);
+		dlib::matrix<dlib::rgb_pixel> dlibimg = dlib::mat(cimg);
 
 		auto prediction = net(dlibimg);
 
@@ -86,23 +95,26 @@ public:
 private:
 	static void prepare(cv::Mat& input, cv::Mat& result)
 	{
-		cv::resize(input, result, cv::Size(28, 28));
+		cv::Mat tmp;
+		cv::cvtColor(input, tmp, cv::COLOR_GRAY2RGB);
+		//result.convertTo(tmp, CV_32FC3);
+		cv::resize(tmp, result, cv::Size(227, 227));
+		//cv::resize(input, result, cv::Size(113, 113));
 	}
 
-	static dlib::dnn_trainer<cnn_xs>* prepareTrainer()
+	static dlib::dnn_trainer<alex>* prepareTrainer()
 	{
-		dlib::dnn_trainer<cnn_xs>* trainer = new dlib::dnn_trainer<cnn_xs>(net, dlib::sgd(), { 0 });
-		trainer->set_learning_rate(0.01);
-		trainer->set_min_learning_rate(0.0001);
-		trainer->set_mini_batch_size(512);
-		trainer->set_iterations_without_progress_threshold(2000);
-		trainer->set_max_num_epochs(100);
+		dlib::dnn_trainer<alex>* trainer = new dlib::dnn_trainer<alex>(net, dlib::sgd(), { 0 });
+		trainer->set_learning_rate(1e-4);
+		trainer->set_min_learning_rate(1e-6);
+		trainer->set_mini_batch_size(128);
+		trainer->set_iterations_without_progress_threshold(1000);
+		trainer->set_max_num_epochs(200);
 
 		return trainer;
 	}
 };
 
-
-cnn_xs CNN::net = cnn_xs{};
-const std::string CNN::save = "cnn4.dat";
-bool CNN::hasNet = false;
+alex AlexNet::net = alex{};
+const std::string AlexNet::save = "alex3.dat";
+bool AlexNet::hasNet = false;

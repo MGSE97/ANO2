@@ -55,31 +55,32 @@ Only one method can be used at once.
 
 ### Without learning
 
-|Method|Accuracy|F1 Score|Weaknesses|Info|
-|------|:------:|:------:|----------|----|
-|Canny edge detection|99.2%|98.7%|Shadows, Far objects, Wide cars from near lots||
-|Treshold, Local binnary patterns|98.7%|97.9%|Noise from ground|Wrong usage|
+|#|Method|Accuracy|F1 Score|Weaknesses|Info|
+|-|------|:------:|:------:|----------|----|
+|1.1|Canny edge detection|99.2%|98.7%|Shadows, Far objects, Wide cars from near lots||
+|1.2|Treshold, Local binnary patterns|98.7%|97.9%|Noise from ground|Wrong usage|
 
 ### Partial learning
 
-|Method|Accuracy|F1 Score|Learning time|Weaknesses|Info|
-|------|:------:|:------:|:-----------:|----------|----|
-|LBP, HOG, Comparison Day/Night|80.4%|70.7%|Short|Slow|Loads free lots images|
+|#|Method|Accuracy|F1 Score|Learning time|Weaknesses|Info|
+|-|------|:------:|:------:|:-----------:|----------|----|
+|2.1|LBP, HOG, Comparison Day/Night|80.4%|70.7%|Short|Slow|Loads free lots images|
 
 ### With learning
 
-|Method|Accuracy|F1 Score|Learning time|Epochs|Batch Size|Learning Rate|Weaknesses|Info / Loss|
-|------|:------:|:------:|:-----------:|:----:|:--------:|:-----------:|----------|-----------|
-|LBP, HOG, SVM|70.5%|27.4%|Short||||Weak predictions||
-||||||||||
-|CNN XS|92.3%|89.1%|Short|100|512|1e-2|Small network, Shadows, Night|From lecture, DLib|
-||||||||||
-|Alex Net|-|-|Long|-|-|-|Large, Sensitive|DLib| 
-|->|98.9%|98.3%|30 min|200|128|1e-5||~0.000872731|                      
-|->|98.7%|98.0%|15 min|90|32|1e-5||~0.0114783|
-|->|98.7%|97.9%|1.5 h|398|32|1e-6||~0.0487347|
-||||||||||
-|Combination|99.3%|98.9%|Slow||||Loads free lots images|Combination of above|
+|#|Method|Accuracy|F1 Score|Learning time|Epochs|Batch Size|Learning Rate|Weaknesses|Info / Loss|
+|-|------|:------:|:------:|:-----------:|:----:|:--------:|:-----------:|----------|-----------|
+|3.1|LBP, HOG, SVM|70.5%|27.4%|Short||||Weak predictions||
+|||||||||||
+|3.2|CNN XS|92.3%|89.1%|Short|100|512|1e-2|Small network, Shadows, Night|From lecture, DLib|
+|||||||||||
+|3.3|Alex Net|-|-|Long|-|-|-|Large, Sensitive|DLib| 
+|3.3.1|->|98.9%|98.3%|30 min|200|128|1e-5||~0.000872731|                      
+|3.3.2|->|98.7%|98.0%|15 min|90|32|1e-5||~0.0114783|
+|3.3.3|->|98.7%|97.9%|1.5 h|398|32|1e-6||~0.0487347|
+|||||||||||
+|4.1|Combination 1|99.3%|98.9%|Slow||||Partial learning|1.1, 1.2, 2.1|
+|4.2|Combination 2|99.4%|99.1%|Long||||Full learning|1.1, 1.2, 2.1, 3.3.1|   
 
 ## Author
 
