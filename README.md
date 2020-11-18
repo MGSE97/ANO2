@@ -70,11 +70,11 @@ Only one method can be used at once.
 
 |#|Method|Accuracy|F1 Score|Learning time|Epochs|Batch Size|Learning Rate|Weaknesses|Info / Loss|
 |-|------|:------:|:------:|:-----------:|:----:|:--------:|:-----------:|----------|-----------|
-|3.1|LBP, HOG, SVM|70.5%|27.4%|Short||||Weak predictions||
+|3.1|LBP,&nbsp;HOG,&nbsp;SVM|70.5%|27.4%|Short||||Weak predictions||
 |||||||||||
-|3.2|CNN XS|92.3%|89.1%|Short|100|512|1e-2|Small network, Shadows, Night|From lecture, DLib|
+|3.2|CNN&nbsp;XS|92.3%|89.1%|Short|100|512|1e-2|Small network, Shadows, Night|From lecture, DLib|
 |||||||||||
-|3.3|Alex Net|-|-|Long|-|-|-|Sensitive, Large&nbsp;(774MB)|DLib| 
+|3.3|Alex&nbsp;Net|-|-|Long|-|-|-|Sensitive, Large&nbsp;(774MB)|DLib| 
 |3.3.1|->|98.9%|98.3%|30 min|200|128|1e-5||~0.000872731|                      
 |3.3.2|+ flips, night ->|98.9%|98.3%|20 min|85|256|1e-5|Memory heavy|~0.0390906|
 |3.3.3|->|98.7%|98.0%|15 min|90|32|1e-5||~0.0114783|
@@ -82,15 +82,15 @@ Only one method can be used at once.
 |||||||||||
 |3.4|VGG7|-|-|Long|-|-|-|Large&nbsp;(2.4GB)|DLib| 
 |3.4.1|->|91.4%|87.9%|30 min|102|32|1e-5||~0.00896601|
-|3.4.2|+ blur 5x5 ->|84.9%|80.8%|40 min|133|32|1e-5||~0.00806217|                      
-|3.4.3|->|88.6%|84.7%|25 min|71|32|1e-4||~0.000616295|
+|3.4.2|->|88.6%|84.7%|25 min|71|32|1e-4||~0.000616295|
+|3.4.3|+&nbsp;blur&nbsp;5x5<br/>->|84.9%|80.8%|40 min|133|32|1e-5||~0.00806217|                      
 |3.4.4|->|79.2%|75.3%|15 min|53|32|1e-3||~7.05445e-05|
 |||||||||||
 |3.5|VGG19|-|-|Long|-|-|-|Large&nbsp;(1.7GB)|DLib|
 |3.5.1|->|95.2%|92.9%|172 min|448|512|1e-3||~3.49625e-05|
 |||||||||||
-|4.1|Combination 1|99.3%|98.9%|Slow||||Partial learning|1.1, 1.2, 2.1|
-|4.2|Combination 2|99.4%|99.1%|Long||||Full learning|1.1, 1.2, 2.1, 3.3.1|   
+|4.1|Combination&nbsp;1|99.3%|98.9%|Slow||||Partial learning|1.1, 1.2, 2.1|
+|4.2|Combination&nbsp;2|99.4%|99.1%|Long||||Full learning|1.1, 1.2, 2.1, 3.3.1|   
 
 ## Author
 
