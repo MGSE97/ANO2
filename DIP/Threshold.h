@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include <opencv2/shape/hist_cost.hpp>
 
 #include "Method.h"
 #include "Canny.h"

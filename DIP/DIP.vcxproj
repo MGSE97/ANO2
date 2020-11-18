@@ -85,9 +85,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>C:\Program Files %28x86%29\dlib_project\lib;D:\Documents\Projekty\Škola\ANO2\vsproj\cudnn-10.2-v7.6.5.32\cuda\lib\x64;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)\..\opencv2\x64\vc16\lib;C:\Program Files %28x86%29\dlib_project\lib;D:\Documents\Projekty\Škola\ANO2\vsproj\cudnn-10.2-v7.6.5.32\cuda\lib\x64;$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
-    <IncludePath>C:\Program Files %28x86%29\dlib_project\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)\..\opencv2\include;C:\Program Files %28x86%29\dlib_project\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <ReferencePath>$(VC_ReferencesPath_x64);</ReferencePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -163,7 +163,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)\..\opencv\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
@@ -172,8 +172,31 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)\..\opencv\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opencv_world343.lib;cudnn.lib;cuda.lib;cudart_static.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;cublas.lib;cudart.lib;curand.lib;nppc.lib;nppidei.lib;nppist.lib;nvblas.lib;nvrtc.lib;cublasLt.lib;cusolver.lib;nppial.lib;nppif.lib;nppisu.lib;nvgraph.lib;OpenCL.lib;cudadevrt.lib;cufft.lib;cusolverMg.lib;nppicc.lib;nppig.lib;nppitc.lib;nvjpeg.lib;cufftw.lib;cusparse.lib;nppicom.lib;nppim.lib;npps.lib;nvml.lib;dlib19.21.0_release_64bit_msvc1927.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opencv_calib3d450.lib;
+opencv_core450.lib;
+opencv_dnn450.lib;
+opencv_features2d450.lib;
+opencv_flann450.lib
+;opencv_gapi450.lib;
+opencv_highgui450.lib;
+opencv_imgcodecs450.lib;
+opencv_imgproc450.lib;
+opencv_ml450.lib;
+opencv_objdetect450.lib;
+opencv_photo450.lib;
+opencv_stitching450.lib
+;opencv_video450.lib;
+opencv_videoio450.lib;cudnn.lib;cuda.lib;cudart_static.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;cublas.lib;cudart.lib;curand.lib;nppc.lib;nppidei.lib;nppist.lib;nvblas.lib;nvrtc.lib;cublasLt.lib;cusolver.lib;nppial.lib;nppif.lib;nppisu.lib;nvgraph.lib;OpenCL.lib;cudadevrt.lib;cufft.lib;cusolverMg.lib;nppicc.lib;nppig.lib;nppitc.lib;nvjpeg.lib;cufftw.lib;cusparse.lib;nppicom.lib;nppim.lib;npps.lib;nvml.lib;dlib19.21.0_release_64bit_msvc1927.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <LargeAddressAware>true</LargeAddressAware>
+      <HeapReserveSize>
+      </HeapReserveSize>
+      <HeapCommitSize>
+      </HeapCommitSize>
+      <StackReserveSize>
+      </StackReserveSize>
+      <StackCommitSize>
+      </StackCommitSize>
     </Link>
     <CudaLink>
       <AdditionalOptions>-arch=sm_50;-D__STRICT_ANSI__;-D_MWAITXINTRIN_H_INCLUDED;-D_FORCE_INLINES; -std=c++11 -Xcompiler -fPIC %(AdditionalOptions)</AdditionalOptions>
@@ -184,6 +207,12 @@
     <CudaCompile>
       <TargetMachinePlatform>64</TargetMachinePlatform>
     </CudaCompile>
+    <PostBuildEvent>
+      <Command>XCOPY "$(SolutionDir)"\opencv2\x64\vc16\bin\*.dll "$(TargetDir)" /D /K /Y</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copy DLLs to Target Directory</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AlexNet.h" />
@@ -198,10 +227,10 @@
     <ClInclude Include="SVM.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Threshold.h" />
+    <ClInclude Include="VGG19.h" />
     <ClInclude Include="VGG7.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dlib\all\source.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

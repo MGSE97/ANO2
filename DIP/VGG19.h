@@ -7,27 +7,40 @@
 #include "dlib/dnn.h"
 #include "dlib/opencv.h"
 
-using VGG7_Net = dlib::loss_multiclass_log<
+using VGG19_Net = dlib::loss_multiclass_log<
 	dlib::relu < dlib::fc < 2,
+	dlib::relu < dlib::fc < 4096,
 	dlib::dropout <
-	dlib::relu < dlib::fc < 1024,
-	dlib::dropout <
-	dlib::relu < dlib::fc < 1024,
-	dlib::max_pool < 3, 3, 1, 1,
+	dlib::relu < dlib::fc < 4096,
+	dlib::max_pool < 2, 2, 2, 2,
+	dlib::relu < dlib::con < 512, 3, 3, 1, 1,
+	dlib::relu < dlib::con < 512, 3, 3, 1, 1,
+	dlib::relu < dlib::con < 512, 3, 3, 1, 1,
+	dlib::relu < dlib::con < 512, 3, 3, 1, 1,
+	dlib::max_pool < 2, 2, 2, 2,
+	dlib::relu < dlib::con < 512, 3, 3, 1, 1,
+	dlib::relu < dlib::con < 512, 3, 3, 1, 1,
+	dlib::relu < dlib::con < 512, 3, 3, 1, 1,
+	dlib::relu < dlib::con < 512, 3, 3, 1, 1,
+	dlib::max_pool < 2, 2, 2, 2,
 	dlib::relu < dlib::con < 256, 3, 3, 1, 1,
 	dlib::relu < dlib::con < 256, 3, 3, 1, 1,
-	dlib::max_pool < 3, 3, 1, 1,
+	dlib::relu < dlib::con < 256, 3, 3, 1, 1,
+	dlib::relu < dlib::con < 256, 3, 3, 1, 1,
+	dlib::max_pool < 2, 2, 2, 2,
 	dlib::relu < dlib::con < 128, 3, 3, 1, 1,
-	dlib::max_pool < 3, 3, 1, 1,
+	dlib::relu < dlib::con < 128, 3, 3, 1, 1,
+	dlib::max_pool < 2, 2, 2, 2,
+	dlib::relu < dlib::con < 64, 3, 3, 1, 1,
 	dlib::relu < dlib::con < 64, 3, 3, 1, 1,
 	dlib::input < dlib::matrix < dlib::rgb_pixel
-	>>>>>>>>>>>>>>>>>>>>>>; // 224x224x3
+	>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>; // 224x224x3
 
 
-class VGG7 : public Method
+class VGG19 : public Method
 {
 public:
-	static VGG7_Net net;
+	static VGG19_Net net;
 	static const std::string save;
 	static bool hasNet;
 
@@ -36,16 +49,12 @@ public:
 		std::vector<dlib::matrix<dlib::rgb_pixel>> images;
 		std::vector<unsigned long> labels;
 
-		/*const auto images_count = train_images.size();
+		const auto images_count = train_images.size();
 		for (int i = 0; i < images_count; i++)
 		{
-			train_images.push_back(train_images[i] / 2);
-			train_labels.push_back(train_labels[i]);
-			train_images.push_back(train_images[i] / 3);
-			train_labels.push_back(train_labels[i]);
 			train_images.push_back(train_images[i] / 4);
 			train_labels.push_back(train_labels[i]);
-		}*/
+		}
 
 		for (int i = 0; i < train_images.size(); i++) {
 			cv::Mat image;
@@ -105,12 +114,12 @@ private:
 		//cv::resize(input, result, cv::Size(113, 113));
 	}
 
-	static dlib::dnn_trainer<VGG7_Net>* prepareTrainer()
+	static dlib::dnn_trainer<VGG19_Net>* prepareTrainer()
 	{
-		dlib::dnn_trainer<VGG7_Net>* trainer = new dlib::dnn_trainer<VGG7_Net>(net, dlib::sgd(), { 0 });
-		trainer->set_learning_rate(1e-5);
+		dlib::dnn_trainer<VGG19_Net>* trainer = new dlib::dnn_trainer<VGG19_Net>(net, dlib::sgd(), { 0 });
+		trainer->set_learning_rate(1e-3);
 		trainer->set_min_learning_rate(1e-7);
-		trainer->set_mini_batch_size(32);
+		trainer->set_mini_batch_size(512);
 		trainer->set_iterations_without_progress_threshold(1000);
 		trainer->set_max_num_epochs(200);
 
@@ -118,6 +127,6 @@ private:
 	}
 };
 
-VGG7_Net VGG7::net = VGG7_Net{};
-const std::string VGG7::save = "vgg7_4.dat";
-bool VGG7::hasNet = false;
+VGG19_Net VGG19::net = VGG19_Net{};
+const std::string VGG19::save = "vgg19_1.dat";
+bool VGG19::hasNet = false;

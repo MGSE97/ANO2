@@ -66,15 +66,15 @@
     <ClInclude Include="VGG7.h">
       <Filter>Methods\Learning</Filter>
     </ClInclude>
+    <ClInclude Include="VGG19.h">
+      <Filter>Methods\Learning</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="dlib\all\source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

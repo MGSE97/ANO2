@@ -38,3 +38,5 @@ opencv/
 /DIP/ichl.dat.bkp
 /DIP/ichl.dat
 *.dat
+/opencv2
+/opencv-4.5.0.zip

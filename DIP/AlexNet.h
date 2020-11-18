@@ -31,27 +31,18 @@ public:
 	
 	void train(std::vector<cv::Mat>& train_images, std::vector<unsigned char>& train_labels) override
 	{
-		std::vector<dlib::matrix<dlib::rgb_pixel>> images;
-		std::vector<unsigned long> labels;
+		std::vector<dlib::matrix<dlib::rgb_pixel>>* images = new std::vector<dlib::matrix<dlib::rgb_pixel>>();
+		std::vector<unsigned long>* labels = new std::vector<unsigned long>();
 
-		/*const auto images_count = train_images.size();
-		for (int i = 0; i < images_count; i++)
-		{
-			train_images.push_back(train_images[i] / 2);
-			train_labels.push_back(train_labels[i]);
-			train_images.push_back(train_images[i] / 3);
-			train_labels.push_back(train_labels[i]);
-			train_images.push_back(train_images[i] / 4);
-			train_labels.push_back(train_labels[i]);
-		}*/
+		augment_data(train_images, train_labels);
 
 		for (int i = 0; i < train_images.size(); i++) {
 			cv::Mat image;
 			prepare(train_images[i], image);
 			dlib::cv_image<dlib::rgb_pixel> cimg(image);
 			dlib::matrix<dlib::rgb_pixel> dlibimg = dlib::mat(cimg);
-			images.push_back(dlibimg);
-			labels.push_back(train_labels[i]);
+			images->push_back(dlibimg);
+			labels->push_back(train_labels[i]);
 		}
 
 		auto trainer = prepareTrainer();
@@ -59,7 +50,7 @@ public:
 
 		std::cout << "Training ..." << std::endl;
 
-		trainer->train(images, labels);
+		trainer->train(*images, *labels);
 		hasNet = true;
 
 		std::cout << "Saving ..." << std::endl;
@@ -92,6 +83,39 @@ public:
 		return prediction;
 	};
 
+	void augment_data(std::vector<cv::Mat>& train_images, std::vector<unsigned char>& train_labels)
+	{
+		std::cout << "Data Augmentation ..." << std::endl;
+
+		// -- Add Night images
+		const auto images_count_0 = train_images.size();
+		for (int i = 0; i < images_count_0; i++)
+		{
+			train_images.push_back(train_images[i] / 4);
+			train_labels.push_back(train_labels[i]);
+		}
+
+		// -- Add Flipped images
+		const auto images_count = train_images.size();
+		for (int i = 0; i < images_count; i++)
+		{
+			cv::Mat original = train_images[i];
+			cv::Mat changed; // 0 - X, 1+ - Y
+			cv::flip(original, changed, 0); // X
+			train_images.push_back(changed);
+			train_labels.push_back(train_labels[i]);
+			cv::flip(changed, changed, 1); // XY
+			train_images.push_back(changed);
+			train_labels.push_back(train_labels[i]);
+			cv::flip(original, changed, 1); // Y
+			train_images.push_back(changed);
+			train_labels.push_back(train_labels[i]);
+		}
+
+		std::cout << "Train images: " << train_images.size() << std::endl;
+		std::cout << "Train labels: " << train_labels.size() << std::endl;
+	}
+
 private:
 	static void prepare(cv::Mat& input, cv::Mat& result)
 	{
@@ -105,9 +129,9 @@ private:
 	static dlib::dnn_trainer<alex>* prepareTrainer()
 	{
 		dlib::dnn_trainer<alex>* trainer = new dlib::dnn_trainer<alex>(net, dlib::sgd(), { 0 });
-		trainer->set_learning_rate(1e-4);
-		trainer->set_min_learning_rate(1e-6);
-		trainer->set_mini_batch_size(128);
+		trainer->set_learning_rate(1e-5);
+		trainer->set_min_learning_rate(1e-8);
+		trainer->set_mini_batch_size(256);
 		trainer->set_iterations_without_progress_threshold(1000);
 		trainer->set_max_num_epochs(200);
 
@@ -116,5 +140,5 @@ private:
 };
 
 alex AlexNet::net = alex{};
-const std::string AlexNet::save = "alex3.dat";
+const std::string AlexNet::save = "alex5.dat";
 bool AlexNet::hasNet = false;

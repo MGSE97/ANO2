@@ -1,6 +1,4 @@
 ﻿#pragma once
-#include <opencv2/core/core.hpp>
-#include <opencv2/shape/hist_cost.hpp>
 
 #include "Method.h"
 
