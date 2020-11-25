@@ -34,7 +34,7 @@ public:
 		std::vector<dlib::matrix<dlib::rgb_pixel>>* images = new std::vector<dlib::matrix<dlib::rgb_pixel>>();
 		std::vector<unsigned long>* labels = new std::vector<unsigned long>();
 
-		augment_data(train_images, train_labels);
+		//augment_data(train_images, train_labels);
 
 		for (int i = 0; i < train_images.size(); i++) {
 			cv::Mat image;
@@ -140,5 +140,5 @@ private:
 };
 
 alex AlexNet::net = alex{};
-const std::string AlexNet::save = "alex5.dat";
+const std::string AlexNet::save = "alex3.dat";
 bool AlexNet::hasNet = false;

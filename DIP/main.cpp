@@ -49,9 +49,9 @@ void convert_to_ml(const std::vector< cv::Mat >& train_samples, cv::Mat& trainDa
 #define M_VGG19 24
 // -- Methods --
 
-#define METHOD M_VGG19
+#define METHOD M_ALEX
 
-#define TRAIN true
+#define TRAIN false
 #define WAIT 500
 
 
@@ -183,8 +183,8 @@ bool is_occupied(int i, Mat* plot, std::vector<Mat>* spaces_imgs, Mat* spaces_im
 		ms.push_back(PredictionMethod{ new SVMC{}, 1 });
 	#elif METHOD == M_CNN
 		ms.push_back(PredictionMethod{ new CNN{}, 1 });
-	#elif METHOD == M_ALEX_XL
-		ms.push_back(PredictionMethod{ new AlexNetXL{}, 1 });
+	#elif METHOD == M_ALEX
+		ms.push_back(PredictionMethod{ new AlexNet{}, 1 });
 	#elif METHOD == M_VGG7
 		ms.push_back(PredictionMethod{ new VGG7{}, 1 });
 	#elif METHOD == M_VGG19
