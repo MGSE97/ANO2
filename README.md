@@ -1,6 +1,6 @@
 # ANO2
 
-Image Analysis II. Detection of parking lot availablity using multiple methods.
+Image Analysis II. Detection of parking lot availability using multiple methods.
 
 
 ## Getting Started
